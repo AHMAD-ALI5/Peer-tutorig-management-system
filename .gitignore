@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+*.db
+tutor_report.txt
+venv/
+.venv/
+.idea/
+.vscode/
