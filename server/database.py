@@ -109,6 +109,19 @@ class Database:
             (date.today().isoformat(), f"%{subject.lower()}%", max_rate))
 
     # ---------- slots ----------
+    def slot_exists(self, tutor_id, day, start, end):
+        rows = self.query(
+            """
+            SELECT id FROM slots
+            WHERE tutor_id = ?
+                AND slot_date = ?
+                AND start_time = ?
+                AND end_time = ?
+            """,
+            (tutor_id, day, start, end)
+        )
+        return len(rows) > 0
+    
     def list_slots(self, tutor_id, status=""):
         sql = "SELECT * FROM slots WHERE tutor_id = ?"
         params = [tutor_id]
