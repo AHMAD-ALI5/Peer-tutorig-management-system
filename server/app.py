@@ -146,6 +146,8 @@ def create_app(db_path=DEFAULT_DB):
             return err("Times must look like 16:00.", 400)
         if start >= end:
             return err("The end time must be after the start time.", 400)
+        if db.slot_exists(user_id, day, start, end):
+            return err("You have already created a slot for this date and time.", 400)
         db.add_slot(user_id, day, start, end)
         return ok(message="Time slot added.")
 
