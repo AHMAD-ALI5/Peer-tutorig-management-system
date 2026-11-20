@@ -78,11 +78,15 @@ def create_app(db_path=DEFAULT_DB):
         if role not in ("student", "tutor"):
             return err("Choose Student or Tutor.", 400)
         rate = 0.0
+        rate_text = form.get("hourly_rate", "").strip()
         if role == "tutor":
-            rate, problem = check_tutor_fields(subject, form.get("hourly_rate", ""))
+            rate, problem = check_tutor_fields(subject, rate_text)
             if problem:
                 return err(problem, 400)
+
         else:
+            if subject or rate_text:
+                return err("Students cannot enter a subject or hourly rate. Please select Tutor.",400)
             subject = ""
         if db.get_login(username):
             return err("That username is already taken.", 400)
@@ -147,7 +151,9 @@ def create_app(db_path=DEFAULT_DB):
         if start >= end:
             return err("The end time must be after the start time.", 400)
         if db.slot_exists(user_id, day, start, end):
-            return err("You have already created a slot for this date and time.", 400)
+            return err(
+            "You have already created a slot for this date and time.",400)
+        
         db.add_slot(user_id, day, start, end)
         return ok(message="Time slot added.")
 
